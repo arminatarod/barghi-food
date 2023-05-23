@@ -1,5 +1,5 @@
 public class Food {
-    private int id, price, ratingCount, restaurantID;
+    private int id, price, ratingCount, restaurantID, discount;
     private double averageRating;
     // baraye bakhsh graphic khobe aksesham dashte bashim !? ye string url
     private String name;
@@ -8,6 +8,14 @@ public class Food {
 
     public void setRestaurantID(int restaurantID) {
         this.restaurantID = restaurantID;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public int getDiscount() {
+        return discount;
     }
 
     public void setId(int id) {

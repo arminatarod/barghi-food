@@ -2,6 +2,7 @@ import java.util.HashMap;
 
 public class Order {
     // bayad be noii zakhire kard hamrah in item takhfif chia gereftim
+    // zaman tahvoil che samie
     private class FoodData {
         private int count, totalPrice;
 

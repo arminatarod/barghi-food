@@ -3,14 +3,29 @@ import java.util.ArrayList;
 public class Restaurant {
     /// ye ide ine ke ye aray joda baraye sefareshaye faal begirim, bad ke tahvil dade shodo polesh raft to hesab bezarimesh to order
     private int location, money, ratingCount;
+    // add active order array list
     private double averageRating;
     private ArrayList<Integer> orders, comments, menu;
-    private String foodType;
-    public void setFoodType(String foodType) {
+    private ArrayList<String> foodType;
+
+    public void setFoodType(ArrayList<String> foodType) {
         this.foodType = foodType;
     }
-    public String getFoodType() {
+    public ArrayList<String> getFoodType() {
         return foodType;
+    }
+    public void addFoodType(String type) {
+        for (String i : foodType)
+            if (i.equals(type))
+                return;
+        foodType.add(type);
+    }
+    public void removeFoodType(String type) {
+        for (String i : foodType)
+            if (i.equals(type)) {
+                foodType.remove(i);
+                return;
+            }
     }
     public void setLocation(int location) {
         this.location = location;
