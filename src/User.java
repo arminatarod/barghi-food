@@ -37,14 +37,12 @@ public class User extends Account {
     public void setCharge(int charge) {
         this.charge = charge;
     }
-
     public int getCharge() {
         return charge;
     }
     public void addCharge (int value) {
         charge += value;
     }
-
     public void addCoupon (Coupon x) {
         coupons.add(x);
     }
@@ -57,5 +55,13 @@ public class User extends Account {
     public int getComment(int index) {
         return comments.get(index);
     }
+    public void removeLocations(int id) {
+        for (int i = 0; i < locations.size(); i++)
+            if (locations.get(i) == id) {
+                locations.remove(i);
+                return;
+            }
+    }
+
 
 }

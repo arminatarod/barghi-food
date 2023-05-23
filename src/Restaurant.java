@@ -6,7 +6,6 @@ public class Restaurant {
     private double averageRating;
     private ArrayList<Integer> orders, comments, menu;
     private String foodType;
-
     public void setFoodType(String foodType) {
         this.foodType = foodType;
     }
@@ -41,7 +40,6 @@ public class Restaurant {
     public void addMenuItem (int menuItemID) {
         menu.add(menuItemID);
     }
-
     public double getAverageRating() {
         return averageRating;
     }
@@ -52,11 +50,9 @@ public class Restaurant {
         averageRating = (averageRating * ratingCount + rating) / (ratingCount + 1);
         ratingCount++;
     }
-
     public void editRating(int oldRating, int newRating) {
-
+        averageRating = (averageRating * ratingCount - oldRating + newRating) / ratingCount;
     }
-
     public void addComment(int commentID) {
         comments.add(commentID);
     }

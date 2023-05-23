@@ -9,6 +9,13 @@ public class Admin extends Account {
     public int getRestaurant (int index) {
         return restaurants.get(index);
     }
+    public void removeRestaurant(int id) {
+        for (int i = 0; i < restaurants.size(); i++)
+            if (restaurants.get(i) == id) {
+                restaurants.remove(i);
+                return;
+            }
+    }
     public ArrayList<Integer> getRestaurants() {
         return restaurants;
     }

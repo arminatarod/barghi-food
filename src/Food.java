@@ -1,9 +1,10 @@
 public class Food {
-    private int id, price, averageRating, ratingCount, restaurantID;
+    private int id, price, ratingCount, restaurantID;
+    private double averageRating;
     // baraye bakhsh graphic khobe aksesham dashte bashim !? ye string url
     private String name;
     private boolean activeDiscount, isActive;
-    // time stamp toye file neveshte chie ?
+    // time stamp toye core manage beshe behtare, yeseri query zamani ke khodesh miad discount ro bara midare
 
     public void setRestaurantID(int restaurantID) {
         this.restaurantID = restaurantID;
@@ -33,7 +34,7 @@ public class Food {
     public String getName() {
         return name;
     }
-    public int getAverageRating() {
+    public double getAverageRating() {
         return averageRating;
     }
     public int getRatingCount() {
@@ -48,6 +49,6 @@ public class Food {
     }
 
     public void editRating(int oldRating, int newRating) {
-
+        averageRating = (averageRating * ratingCount - oldRating + newRating) / ratingCount;
     }
 }
