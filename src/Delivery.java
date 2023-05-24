@@ -6,6 +6,11 @@ public class Delivery extends Account {
     private int location, money;
     private ArrayList<Integer> orders;
     private int activeOrder;
+
+    public Delivery(String userName, String password, String recoveryQuestion, String recoveryQuestionAnswer, int id) {
+        super(userName, password, recoveryQuestion, recoveryQuestionAnswer, id);
+    }
+
     public int getLocation() {
         return location;
     }

@@ -5,6 +5,11 @@ public class User extends Account {
     private ArrayList<Integer> locations, orders, comments; // order deliver locations (ids of graph node) & ids of orders & ids of comments
     private Order cart;
     private int charge;
+
+    public User(String userName, String password, String recoveryQuestion, String recoveryQuestionAnswer, int id) {
+        super(userName, password, recoveryQuestion, recoveryQuestionAnswer, id);
+    }
+
     public Order getCart() {
         return cart;
     }
