@@ -8,8 +8,10 @@ public class Core {
     ArrayList<Comment> comments;
     ArrayList<Restaurant> restaurants;
     ArrayList<Order> orders;
-    Account loggedInAccount;
-    public void login(String userName, String password) {
+    User loggedInUser = null;
+    Admin loggedInAdmin = null;
+    Delivery loggedInDelivery = null;
+    public void loginUser(String userName, String password) {
         for(Account acc : accounts)
         {
             if(userName.equals(acc.getUserName()))
@@ -17,7 +19,41 @@ public class Core {
                 if(password.equals(acc.getPassword()))
                 {
                     System.out.println("logged in successfully.");
-                    loggedInAccount = acc;
+                    loggedInUser = (User) acc;
+                    break;
+                }
+                System.out.println("input password is wrong!!!!");
+                break;
+            }
+        }
+        System.out.println("There is no account with this username!!!!");
+    }
+    public void loginAdmin(String userName, String password) {
+        for(Account acc : accounts)
+        {
+            if(userName.equals(acc.getUserName()))
+            {
+                if(password.equals(acc.getPassword()))
+                {
+                    System.out.println("logged in successfully.");
+                    loggedInAdmin = (Admin) acc;
+                    break;
+                }
+                System.out.println("input password is wrong!!!!");
+                break;
+            }
+        }
+        System.out.println("There is no account with this username!!!!");
+    }
+    public void loginDelivery(String userName, String password) {
+        for(Account acc : accounts)
+        {
+            if(userName.equals(acc.getUserName()))
+            {
+                if(password.equals(acc.getPassword()))
+                {
+                    System.out.println("logged in successfully.");
+                    loggedInDelivery = (Delivery) acc;
                     break;
                 }
                 System.out.println("input password is wrong!!!!");
@@ -27,14 +63,27 @@ public class Core {
         System.out.println("There is no account with this username!!!!");
     }
     public void logout() {
-        if(loggedInAccount == null)
+        if(loggedInAdmin == null || loggedInDelivery == null || loggedInUser == null)
         {
             System.out.println("No one has logged in!!!");
         }
         else
         {
-            System.out.println("Logged out successfully.");
-            loggedInAccount = null;
+            if(loggedInDelivery != null)
+            {
+                System.out.println("Logged out successfully.");
+                loggedInDelivery = null;
+            }
+            else if(loggedInUser != null)
+            {
+                System.out.println("Logged out successfully.");
+                loggedInAdmin = null;
+            }
+            else
+            {
+                System.out.println("Logged out successfully.");
+                loggedInUser = null;
+            }
         }
     }
     public void addUser(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer){
@@ -119,7 +168,14 @@ public class Core {
     }
     /// modirate sefaresh :::::::
     public void selectRestaurant(int restaurantID){
-
+        if(loggedInAdmin == null)
+        {
+            System.out.println("Admin has not logged in!!!!");
+        }
+        else
+        {
+            loggedInAdmin.setInChargeRestuarant(restaurantID);
+        }
     }
     public void searchRestaurantName(String name) {
 

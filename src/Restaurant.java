@@ -5,6 +5,7 @@ public class Restaurant {
     private int location, money, ratingCount;
     // add active order array list
     private double averageRating;
+    private String name;
     private ArrayList<Integer> orders, comments, menu;
     private ArrayList<String> foodType;
 
