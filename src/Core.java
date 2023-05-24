@@ -18,13 +18,13 @@ public class Core {
 
     }
     public void addUser(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer){
-
+        accounts.add(new Account(username,password,recoveryQuestion,recoveryQuestionAnswer,accounts.size()));
     }
     public void addDelivery(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer){
-
+        accounts.add(new Account(username,password,recoveryQuestion,recoveryQuestionAnswer,accounts.size()));
     }
     public void addAdmin(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer){
-
+        accounts.add(new Account(username,password,recoveryQuestion,recoveryQuestionAnswer,accounts.size()));
     }
     public void showLocation() {
 
