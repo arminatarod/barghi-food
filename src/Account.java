@@ -32,6 +32,9 @@ public class Account {
     public String getRecoveryQuestionAnswer() {
         return recoveryQuestionAnswer;
     }
+
+    public ArrayList<String> getUsername() { return username; }
+
     //ye tabe vase chek krdn password ba regex
     public boolean chekPassword(String password)
     {

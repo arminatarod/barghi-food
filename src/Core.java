@@ -1,5 +1,3 @@
-import com.sun.jdi.InconsistentDebugInfoException;
-
 import java.util.ArrayList;
 
 public class Core {
@@ -10,12 +8,34 @@ public class Core {
     ArrayList<Comment> comments;
     ArrayList<Restaurant> restaurants;
     ArrayList<Order> orders;
-    Account logeInAccount;
+    Account loggedInAccount;
     public void login(String userName, String password) {
-
+        for(Account acc : accounts)
+        {
+            if(userName.equals(acc.getUserName()))
+            {
+                if(password.equals(acc.getPassword()))
+                {
+                    System.out.println("logged in successfully.");
+                    loggedInAccount = acc;
+                    break;
+                }
+                System.out.println("input password is wrong!!!!");
+                break;
+            }
+        }
+        System.out.println("There is no account with this username!!!!");
     }
     public void logout() {
-
+        if(loggedInAccount == null)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else
+        {
+            System.out.println("Logged out successfully.");
+            loggedInAccount = null;
+        }
     }
     public void addUser(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer){
         accounts.add(new Account(username,password,recoveryQuestion,recoveryQuestionAnswer,accounts.size()));
