@@ -1,13 +1,17 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Restaurant {
-    /// ye ide ine ke ye aray joda baraye sefareshaye faal begirim, bad ke tahvil dade shodo polesh raft to hesab bezarimesh to order
-    private int location, money, ratingCount;
+    private int location, balance, ratingCount;
+    private Admin admin;
     // add active order array list
     private double averageRating;
     private String name;
-    private ArrayList<Integer> orders, comments, menu;
+    private ArrayList<Order> orders, activeOrders;
+    private ArrayList<Comment> comments;
+    private ArrayList<Food> menu;
     private ArrayList<String> foodType;
+    private HashMap<Integer, Food> IDtoFood = new HashMap<>();
 
     public void setFoodType(ArrayList<String> foodType) {
         this.foodType = foodType;
@@ -16,17 +20,10 @@ public class Restaurant {
         return foodType;
     }
     public void addFoodType(String type) {
-        for (String i : foodType)
-            if (i.equals(type))
-                return;
         foodType.add(type);
     }
     public void removeFoodType(String type) {
-        for (String i : foodType)
-            if (i.equals(type)) {
-                foodType.remove(i);
-                return;
-            }
+        foodType.remove(type);
     }
     public void setLocation(int location) {
         this.location = location;
@@ -34,27 +31,33 @@ public class Restaurant {
     public int getLocation() {
         return location;
     }
-    public int getOrder(int index) {
-        return orders.get(index);
+    public void addOrder(Order order) {
+        activeOrders.add(order);
     }
-    public void addOrder(int orderID) {
-        orders.add(orderID);
-    }
-    public ArrayList<Integer> getOrders() {
+    public ArrayList<Order> getOrders() {
         return orders;
     }
-    public int getMoney() {
-        return money;
+    public ArrayList<Order> getActiveOrders() {
+        return activeOrders;
     }
-    public void addMoney(int value) {
-        money += value;
+    public int getBalance() {
+        return balance;
     }
-
-    public ArrayList<Integer> getMenu() {
+    public void addBalance(int value) {
+        balance += value;
+    }
+    public HashMap<Integer, Food> getIDtoFood() {
+        return IDtoFood;
+    }
+    public ArrayList<Food> getMenu() {
         return menu;
     }
-    public void addMenuItem (int menuItemID) {
-        menu.add(menuItemID);
+    public void addMenuItem(Food menuItem) {
+        menu.add(menuItem);
+        IDtoFood.put(menuItem.getId(), menuItem);
+    }
+    public void deleteMenu() {
+        menu.clear();
     }
     public double getAverageRating() {
         return averageRating;
@@ -69,13 +72,22 @@ public class Restaurant {
     public void editRating(int oldRating, int newRating) {
         averageRating = (averageRating * ratingCount - oldRating + newRating) / ratingCount;
     }
-    public void addComment(int commentID) {
-        comments.add(commentID);
+    public void addComment(Comment comment) {
+        comments.add(comment);
     }
-    public int getComment(int index) {
-        return comments.get(index);
-    }
-    public ArrayList<Integer> getComments() {
+    public ArrayList<Comment> getComments() {
         return comments;
+    }
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+    public Admin getAdmin() {
+        return admin;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
     }
 }

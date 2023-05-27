@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class path {
-    // for containing shortest distance path and its information
-    private int time, nodecount;
+    // for containing the shortest distance path and its information
+    private int time, nodeCount;
     private ArrayList<Integer> pathNode;
     public int getNode(int index) {
         return pathNode.get(index);

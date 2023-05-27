@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Map {
-    // ye data structure baraye adj graph
-    private class edge{
+    // ye data structure baraye graph
+    private class edge {
         private int weight, u;
         public void setU(int u) {
             this.u = u;

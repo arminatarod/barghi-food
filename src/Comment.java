@@ -1,39 +1,30 @@
 public class Comment {
-    private int id, restaurantID, userId;
-    private String commentText, answer;
-    private boolean isAnswered;
+    private int id;
+    private String content, answer;
+    private Account commenter;
 
     public int getId() {
         return id;
     }
-    public int getRestaurantID() {
-        return restaurantID;
-    }
-    public int getUserId() {
-        return userId;
+    public Account getCommenter() {
+        return commenter;
     }
     public String getAnswer() {
         return answer;
     }
-    public String getCommentText() {
-        return commentText;
+    public String getContent() {
+        return content;
     }
     public void setId(int id) {
         this.id = id;
     }
-    public void setRestaurantID(int restaurantID) {
-        this.restaurantID = restaurantID;
-    }
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-    public void setAnswered(boolean answered) {
-        isAnswered = answered;
+    public void setCommenter(Account commenter) {
+        this.commenter = commenter;
     }
     public void setAnswer(String answer) {
         this.answer = answer;
     }
-    public void setCommentText(String commentText) {
-        this.commentText = commentText;
+    public void setContent(String commentText) {
+        this.content = commentText;
     }
 }

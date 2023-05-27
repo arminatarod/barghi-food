@@ -1,23 +1,21 @@
 import java.util.HashMap;
 
 public class Order {
-    // bayad be noii zakhire kard hamrah in item takhfif chia gereftim
-    // zaman tahvoil che samie
     private class FoodData {
-        private int count, totalPrice;
+        private int count, totalPrice, discount;
 
         public int getCount() {
             return count;
         }
-
         public void setCount(int count) {
             this.count = count;
         }
-
+        public void setDiscount(int discount) {
+            this.discount = discount;
+        }
         public int getTotalPrice() {
             return totalPrice;
         }
-
         public void setTotalPrice(int totalPrice) {
             this.totalPrice = totalPrice;
         }
@@ -28,11 +26,14 @@ public class Order {
             count += value;
         }
     }
-    private int id, restaurantID, userID, deliveryID, price;
+    private int id, price;
+    private Restaurant restaurant;
+    private User user;
+    private Deliveryman deliveryman;
     private String status;
     private HashMap<Integer, FoodData> items;
-    public void setRestaurantID(int restaurantID) {
-        this.restaurantID = restaurantID;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
     public int getPrice() {
         return price;
@@ -49,29 +50,27 @@ public class Order {
     public void setId(int id) {
         this.id = id;
     }
-    public void setDeliveryID(int deliveryID) {
-        this.deliveryID = deliveryID;
+    public void setDeliveryman(Deliveryman deliveryman) {
+        this.deliveryman = deliveryman;
     }
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUser(User user) {
+        this.user = user;
     }
-    public int getRestaurantID() {
-        return restaurantID;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
     public int getId() {
         return id;
     }
-    public int getDeliveryID() {
-        return deliveryID;
+    public Deliveryman getDeliveryman() {
+        return deliveryman;
     }
-    public int getUserID() {
-        return userID;
+    public User getUser() {
+        return user;
     }
-
     public void setItems(HashMap<Integer, FoodData> items) {
         this.items = items;
     }
-
     public HashMap<Integer, FoodData> getItems() {
         return items;
     }
