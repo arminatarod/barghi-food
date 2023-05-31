@@ -1,19 +1,25 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Admin extends Account {
-    private ArrayList<Restaurant> restaurants;
-    private HashMap<Integer, Restaurant> IDtoRestaurant;
+    private HashSet<Integer> restaurants = new HashSet<>();
     public Admin(String userName, String password, String recoveryQuestion, String recoveryQuestionAnswer, int id) {
         super(userName, password, recoveryQuestion, recoveryQuestionAnswer, id);
     }
-    public void addRestaurant (Restaurant restaurant) {
-        restaurants.add(restaurant);
+    public void addRestaurant (int restaurantID) {
+        restaurants.add(restaurantID);
     }
-    public void removeRestaurant(Restaurant restaurant) {
-        restaurants.remove(restaurant);
+    public void removeRestaurant(int restaurantID) {
+        restaurants.remove(restaurantID);
     }
-    public HashMap<Integer, Restaurant> getIDtoRestaurant() {
-        return IDtoRestaurant;
+    public HashSet<Integer> getRestaurants() {
+        return restaurants;
+    }
+    static public Admin getAdmin(int ID) {
+        Admin result = new Admin("asdf", "1234", "asdf", "asdf", 1234);
+        //TODO: get admin from file
+        return result;
+    }
+    static public void saveAdmin(int ID, Admin admin) {
+        //TODO: save admin to file
     }
 }

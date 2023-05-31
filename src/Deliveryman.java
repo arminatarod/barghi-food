@@ -1,9 +1,9 @@
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Deliveryman extends Account {
-    private int location, balance;
-    private ArrayList<Integer> orders;
-    private int activeOrder;
+    private int location, balance = 0;
+    private HashSet<Integer> orders = new HashSet<>();
+    private int activeOrder = -1;
 
     public Deliveryman(String userName, String password, String recoveryQuestion, String recoveryQuestionAnswer, int id) {
         super(userName, password, recoveryQuestion, recoveryQuestionAnswer, id);
@@ -15,13 +15,10 @@ public class Deliveryman extends Account {
     public void setLocation(int location) {
         this.location = location;
     }
-    public int getOrder(int index) {
-        return orders.get(index);
-    }
     public void addOrder(int orderID) {
         orders.add(orderID);
     }
-    public ArrayList<Integer> getOrders() {
+    public HashSet<Integer> getOrders() {
         return orders;
     }
     public int getBalance() {
@@ -35,5 +32,13 @@ public class Deliveryman extends Account {
     }
     public void setActiveOrder(int activeOrder) {
         this.activeOrder = activeOrder;
+    }
+    static public Deliveryman getDeliveryman(int ID) {
+        Deliveryman result = new Deliveryman("asdf", "1234", "asdf", "asdf", 1234);
+        //TODO: get deliveryman from file
+        return result;
+    }
+    static public void saveDeliveryman(int ID, Deliveryman deliveryman) {
+        //TODO: save deliveryman to file
     }
 }

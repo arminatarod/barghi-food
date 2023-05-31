@@ -102,4 +102,12 @@ public class Order {
             price += item.getPrice();
         }
     }
+    static public Order getOrder(int ID) {
+        Order result = new Order();
+        //TODO: get order from file
+        return result;
+    }
+    static public void saveOrder(int ID, Order order) {
+        //TODO: save order to file
+    }
 }

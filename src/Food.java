@@ -1,16 +1,14 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Food {
     private int id, price, discount, discountTimestamp;
     private Restaurant restaurant;
     private double averageRating;
-    private ArrayList<Account> raters = new ArrayList<>();
+    private HashSet<Integer> raters = new HashSet<>();
     // baraye bakhsh graphic khobe aksesham dashte bashim !? ye string url
     private String name;
     private boolean activeDiscount, isActive;
-    private ArrayList<Comment> comments = new ArrayList<>();
-    private HashMap<Integer, Comment> IDtoComment = new HashMap<>();
+    private HashSet<Integer> comments = new HashSet<>();
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
@@ -58,9 +56,9 @@ public class Food {
     public int getRatingCount() {
         return raters.size();
     }
-    public void addRating(Account rater, int rating) {
+    public void addRating(int raterID, int rating) {
         averageRating = (averageRating * raters.size() + rating) / (raters.size() + 1);
-        raters.add(rater);
+        raters.add(raterID);
     }
     public Restaurant getRestaurant() {
         return restaurant;
@@ -68,13 +66,18 @@ public class Food {
     public void editRating(int oldRating, int newRating) {
         averageRating = (averageRating * raters.size() - oldRating + newRating) / raters.size();
     }
-    public ArrayList<Comment> getComments() {
+    public HashSet<Integer> getComments() {
         return comments;
     }
-    public HashMap<Integer, Comment> getIDtoComment() {
-        return IDtoComment;
-    }
-    public ArrayList<Account> getRaters() {
+    public HashSet<Integer> getRaters() {
         return raters;
+    }
+    static public Food getFood(int ID) {
+        Food result = new Food();
+        //TODO: get food from file
+        return result;
+    }
+    static public void saveFood(int ID, Food food) {
+        //TODO: save food to file
     }
 }

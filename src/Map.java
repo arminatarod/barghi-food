@@ -24,8 +24,8 @@ public class Map {
     public int distance (int node1, int node2){
         return 0;
     }
-    public path shortestPath (int node1, int node2){
-        return new path();
+    public Path shortestPath (int node1, int node2){
+        return new Path();
     }
 
 }
