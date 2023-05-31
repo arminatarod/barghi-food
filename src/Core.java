@@ -1,20 +1,12 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Core {
     Map map;
-    ArrayList<Food> foods;
-    ArrayList<Account> accounts;
-    HashMap<Integer, Restaurant> IDtoRestaurant;
-    ArrayList<Order> orders;
-    Account loggedInAccount = null;
-    User loggedInUser = null;
-    Admin loggedInAdmin = null;
-    Deliveryman loggedInDelivery = null;
-    Restaurant selectedRestaurant = null;
-    Food selectedFood = null;
-    public void loginUser(String userName, String password) {
-        if (loggedInAdmin != null || loggedInDelivery != null || loggedInUser != null) {
+    HashSet<Account> accounts;
+    int loggedInAccount = -1, loggedInUser = -1, loggedInAdmin = -1, loggedInDeliveryman = -1;
+    int selectedRestaurant = -1, selectedFood = -1;
+    public void login(String userName, String password) {
+        if (loggedInAccount != -1) {
             System.out.println("You are already logged in.");
             return;
         }
@@ -22,46 +14,13 @@ public class Core {
             if (userName.equals(acc.getUsername())) {
                 if (password.equals(acc.getPassword())) {
                     System.out.println("Logged in successfully.");
-                    loggedInUser = (User) acc;
-                    loggedInAccount = acc;
-                    return;
-                }
-                System.out.println("Incorrect password!");
-                return;
-            }
-        }
-        System.out.println("There is no account with this username!");
-    }
-    public void loginAdmin(String userName, String password) {
-        if (loggedInAdmin != null || loggedInDelivery != null || loggedInUser != null) {
-            System.out.println("You are already logged in.");
-            return;
-        }
-        for (Account acc : accounts) {
-            if (userName.equals(acc.getUsername())) {
-                if (password.equals(acc.getPassword())) {
-                    System.out.println("Logged in successfully.");
-                    loggedInAdmin = (Admin) acc;
-                    loggedInAccount = acc;
-                    return;
-                }
-                System.out.println("Incorrect password!");
-                return;
-            }
-        }
-        System.out.println("There is no account with this username!");
-    }
-    public void loginDeliveryman(String userName, String password) {
-        if (loggedInAdmin != null || loggedInDelivery != null || loggedInUser != null) {
-            System.out.println("You are already logged in.");
-            return;
-        }
-        for (Account acc : accounts) {
-            if (userName.equals(acc.getUsername())) {
-                if (password.equals(acc.getPassword())) {
-                    System.out.println("Logged in successfully.");
-                    loggedInDelivery = (Deliveryman) acc;
-                    loggedInAccount = acc;
+                    if (acc.getType().equals("User"))
+                        loggedInUser = acc.getId();
+                    else if (acc.getType().equals("Admin"))
+                        loggedInUser = acc.getId();
+                    else
+                        loggedInDeliveryman = acc.getId();
+                    loggedInAccount = acc.getId();
                     return;
                 }
                 System.out.println("Incorrect password!");
@@ -71,18 +30,18 @@ public class Core {
         System.out.println("There is no account with this username!");
     }
     public void logout() {
-        if (loggedInAccount == null) {
+        if (loggedInAccount == -1) {
             System.out.println("No one has logged in!");
         } else {
-            if (loggedInDelivery != null) {
+            if (loggedInDeliveryman != -1) {
                 System.out.println("Logged out successfully.");
-                loggedInDelivery = null;
-            } else if (loggedInUser != null) {
+                loggedInDeliveryman = -1;
+            } else if (loggedInUser != -1) {
                 System.out.println("Logged out successfully.");
-                loggedInAdmin = null;
+                loggedInAdmin = -1;
             } else {
                 System.out.println("Logged out successfully.");
-                loggedInUser = null;
+                loggedInUser = -1;
             }
         }
     }
@@ -96,116 +55,116 @@ public class Core {
         accounts.add(new Admin(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts.size()));
     }
     public void showLocation() {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
         }
-        System.out.println(selectedRestaurant.getLocation());
+        System.out.println(Restaurant.getRestaurant(selectedRestaurant).getLocation());
     }
     public void editLocation(int nodeID) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
         }
-        selectedRestaurant.setLocation(nodeID);
+        Restaurant.getRestaurant(selectedRestaurant).setLocation(nodeID);
         System.out.println("The location has been updated successfully.");
     }
     public void showFoodType() {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
         }
-        for (String s : selectedRestaurant.getFoodType())
+        for (String s : Restaurant.getRestaurant(selectedRestaurant).getFoodType())
             System.out.println(s);
     }
     public int addFoodType(String type, boolean forSure) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return 1;
-        } else if (!selectedRestaurant.getActiveOrders().isEmpty()) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getActiveOrders().isEmpty()) {
             System.out.println("The restaurant has active orders!");
             return 2;
-        } else if (selectedRestaurant.getFoodType().contains(type)) {
+        } else if (Restaurant.getRestaurant(selectedRestaurant).getFoodType().contains(type)) {
             System.out.println("The restaurant already contains this food type!");
             return 3;
         } else if (!forSure) {
             System.out.println("ARE YOU SURE YOU WANT TO ADD THIS FOOD TYPE TO YOUR RESTAURANT?");
             return 4;
         } else {
-            selectedRestaurant.addFoodType(type);
+            Restaurant.getRestaurant(selectedRestaurant).addFoodType(type);
             System.out.println("Food type added successfully.");
             return 0;
         }
     }
     public int removeFoodType(String type, boolean forSure) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return 1;
-        } else if (!selectedRestaurant.getActiveOrders().isEmpty()) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getActiveOrders().isEmpty()) {
             System.out.println("The restaurant has active orders!");
             return 2;
-        } else if (!selectedRestaurant.getFoodType().contains(type)) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getFoodType().contains(type)) {
             System.out.println("The restaurant does not contain this food type!");
             return 3;
         } else if (!forSure) {
             System.out.println("ARE YOU SURE YOU WANT TO REMOVE THIS FOOD TYPE FROM YOUR RESTAURANT?");
             return 4;
         } else {
-            selectedRestaurant.removeFoodType(type);
-            selectedRestaurant.deleteMenu();
+            Restaurant.getRestaurant(selectedRestaurant).removeFoodType(type);
+            Restaurant.getRestaurant(selectedRestaurant).deleteMenu();
             return 0;
         }
     }
     public int editFoodType(String typeToRemove, String typeToAdd, boolean forSure) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return 1;
-        } else if (!selectedRestaurant.getActiveOrders().isEmpty()) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getActiveOrders().isEmpty()) {
             System.out.println("The restaurant has active orders!");
             return 2;
-        } else if (!selectedRestaurant.getFoodType().contains(typeToRemove)) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getFoodType().contains(typeToRemove)) {
             System.out.println("The restaurant does not contain the given food type!");
             return 3;
-        } else if (selectedRestaurant.getFoodType().contains(typeToAdd)) {
+        } else if (Restaurant.getRestaurant(selectedRestaurant).getFoodType().contains(typeToAdd)) {
             System.out.println("The restaurant already contains the given food type!");
             return 4;
         } else if (!forSure) {
             System.out.println("ARE YOU SURE YOU WANT TO EDIT THIS FOOD TYPE IN YOUR RESTAURANT?");
             return 5;
         } else {
-            selectedRestaurant.removeFoodType(typeToRemove);
-            selectedRestaurant.addFoodType(typeToAdd);
-            selectedRestaurant.deleteMenu();
+            Restaurant.getRestaurant(selectedRestaurant).removeFoodType(typeToRemove);
+            Restaurant.getRestaurant(selectedRestaurant).addFoodType(typeToAdd);
+            Restaurant.getRestaurant(selectedRestaurant).deleteMenu();
             return 0;
         }
     }
     public void showMenu() {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
         }
-        for (Food f : selectedRestaurant.getMenu())
-            System.out.println("ID: " + f.getId() + ", NAME: " + f.getName() + ", PRICE: " + f.getPrice() + ", DISCOUNT: " + f.getDiscount() + ", RATING: " + f.getAverageRating() + ", IS ACTIVE: " + f.getActive());
+        for (int i : Restaurant.getRestaurant(selectedRestaurant).getMenu())
+            System.out.println("ID: " + i + ", NAME: " + Food.getFood(i).getName() + ", PRICE: " + Food.getFood(i).getPrice() + ", DISCOUNT: " + Food.getFood(i).getDiscount() + ", RATING: " + Food.getFood(i).getAverageRating() + ", IS ACTIVE: " + Food.getFood(i).getActive());
     }
     public void editFoodPrice(int foodID, int price) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
-        } else if (!selectedRestaurant.getIDtoFood().containsKey(foodID)) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getMenu().contains(foodID)) {
             System.out.println("The selected restaurant does not have a food with the given ID!");
         } else {
-            selectedRestaurant.getMenu().get(selectedRestaurant.getMenu().indexOf(selectedRestaurant.getIDtoFood().get(foodID))).setPrice(price);
+            Food.getFood(foodID).setPrice(price);
             System.out.println("Information updated successfully.");
         }
     }
     public void editFoodName(int foodID, String newName) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
-        } else if (!selectedRestaurant.getIDtoFood().containsKey(foodID)) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getMenu().contains(foodID)) {
             System.out.println("The selected restaurant does not have a food with the given ID!");
         } else {
-            selectedRestaurant.getMenu().get(selectedRestaurant.getMenu().indexOf(selectedRestaurant.getIDtoFood().get(foodID))).setName(newName);
+            Food.getFood(foodID).setName(newName);
             System.out.println("Information updated successfully.");
         }
     }
@@ -213,13 +172,13 @@ public class Core {
 
     }
     public void activateFood(int foodID) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
-        } else if (!selectedRestaurant.getIDtoFood().containsKey(foodID)) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getMenu().contains(foodID)) {
             System.out.println("The selected restaurant does not have a food with the given ID!");
         } else {
-            selectedRestaurant.getMenu().get(selectedRestaurant.getMenu().indexOf(selectedRestaurant.getIDtoFood().get(foodID))).setActive(true);
+            Food.getFood(foodID).setActive(true);
             System.out.println("Information updated successfully.");
         }
     }
@@ -227,78 +186,78 @@ public class Core {
 
     }
     public void discountFood(int foodID, int discountPercentage, int timestamp) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
             return;
-        } else if (!selectedRestaurant.getIDtoFood().containsKey(foodID)) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getMenu().contains(foodID)) {
             System.out.println("The selected restaurant does not have a food with the given ID!");
         } else {
-            selectedRestaurant.getMenu().get(selectedRestaurant.getMenu().indexOf(selectedRestaurant.getIDtoFood().get(foodID))).setDiscount(discountPercentage, timestamp);
+            Food.getFood(foodID).setDiscount(discountPercentage, timestamp);
             System.out.println("Information updated successfully.");
         }
     }
     public void selectFood(int foodID) {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
-        } else if (!selectedRestaurant.getIDtoFood().containsKey(foodID)) {
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getMenu().contains(foodID)) {
             System.out.println("The selected restaurant does not have a food with the given ID!");
         } else {
-            selectedFood = selectedRestaurant.getIDtoFood().get(foodID);
+            selectedFood = foodID;
             System.out.println("Food selected successfully.");
         }
     }
     public void displayRating() {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
         } else {
-            System.out.println("AVERAGE RATING: " + selectedFood.getAverageRating());
+            System.out.println("AVERAGE RATING: " + Food.getFood(selectedFood).getAverageRating());
         }
     }
     public void displayComments() {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
         } else {
-            for (Comment c : selectedFood.getComments())
-                System.out.println("ID: " + c.getId() + ", USER: " + c.getCommenter().getUsername() + ", CONTENT: " + c.getContent() + ", RESPONSE: " + c.getAnswer());
+            for (int i : Food.getFood(selectedFood).getComments())
+                System.out.println("ID: " + i + ", USER: " + Account.getAccount(Comment.getComment(i).getCommenter()).getUsername() + ", CONTENT: " + Comment.getComment(i).getContent() + ", RESPONSE: " + Comment.getComment(i).getAnswer());
         }
     }
     public void addResponse(int commentID, String message) {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
-        } else if (!selectedFood.getIDtoComment().containsKey(commentID)) {
+        } else if (!Food.getFood(selectedFood).getComments().contains(commentID)) {
             System.out.println("The selected food does not have a comment with the given ID!");
-        } else if (selectedFood.getIDtoComment().get(commentID).getAnswer() != null) {
+        } else if (Comment.getComment(commentID).getAnswer() != null) {
             System.out.println("This comment has already been answered!");
         } else {
-            selectedFood.getIDtoComment().get(commentID).setAnswer(message);
+            Comment.getComment(commentID).setAnswer(message);
             System.out.println("Response added successfully.");
         }
     }
     public void editResponse(int commentID, String message) {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
-        } else if (!selectedFood.getIDtoComment().containsKey(commentID)) {
+        } else if (!Food.getFood(selectedFood).getComments().contains(commentID)) {
             System.out.println("The selected food does not have a comment with the given ID!");
-        } else if (selectedFood.getIDtoComment().get(commentID).getAnswer() == null) {
+        } else if (Comment.getComment(commentID).getAnswer() == null) {
             System.out.println("This comment has never been answered!");
         } else {
-            selectedFood.getIDtoComment().get(commentID).setAnswer(message);
+            Comment.getComment(commentID).setAnswer(message);
             System.out.println("Response edited successfully.");
         }
     }
     public void unselectFood() {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
         } else {
-            selectedFood = null;
+            selectedFood = -1;
             System.out.println("Food unselected successfully.");
         }
     }
     public void unselectRestaurant() {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
         } else {
-            selectedRestaurant = null;
+            selectedRestaurant = -1;
             System.out.println("Restaurant unselected successfully.");
         }
     }
@@ -313,19 +272,19 @@ public class Core {
 
     }
     public void showOrderHistory() {
-        if (selectedRestaurant == null) {
+        if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
         } else {
-            for (Order o : selectedRestaurant.getOrders())
-                System.out.println("ID: " + o.getId() + ", STATUS: " + o.getStatus() + ", DELIVERYMAN: " + o.getDeliveryman() + ", USER: " + o.getUser().getUsername() + ", PRICE: " + o.getPrice());
+            for (int i : Restaurant.getRestaurant(selectedRestaurant).getOrders())
+                System.out.println("ID: " + i + ", STATUS: " + Order.getOrder(i).getStatus() + ", DELIVERYMAN: " + Order.getOrder(i).getDeliveryman() + ", USER: " + Order.getOrder(i).getUser().getUsername() + ", PRICE: " + Order.getOrder(i).getPrice());
         }
     }
     /// modirate sefaresh :::::::
     public void selectRestaurant(int restaurantID) {
-        if (loggedInAdmin == null && loggedInUser == null) {
+        if (loggedInAdmin == -1 && loggedInUser == -1) {
             System.out.println("No admin has logged in!");
         } else {
-            selectedRestaurant = IDtoRestaurant.get(restaurantID);
+            selectedRestaurant = restaurantID;
             System.out.println("Restaurant successfully selected.");
         }
     }
@@ -336,45 +295,45 @@ public class Core {
 
     }
     public void addComment(String content) {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
-        } else if (selectedFood.getRestaurant().getAdmin().equals(loggedInAdmin)) {
+        } else if (Food.getFood(selectedFood).getRestaurant().getAdmin() == loggedInAdmin) {
             System.out.println("You cannot write comments on your own products!");
         } else {
             Comment c = new Comment();
-            c.setCommenter(loggedInAdmin == null? (loggedInUser == null? loggedInDelivery : loggedInUser) : loggedInAdmin);
+            c.setCommenter(loggedInAccount);
             c.setContent(content);
             //TODO: set ID
             System.out.println("Comment added successfully.");
         }
     }
     public void editComment(int commentID, String content) {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
-        } else if (!selectedFood.getIDtoComment().get(commentID).getCommenter().equals(loggedInAccount)) {
+        } else if (Comment.getComment(commentID).getCommenter() != loggedInAccount) {
             System.out.println("You can only edit your own comments!");
         } else {
-            selectedFood.getIDtoComment().get(commentID).setContent(content);
+            Comment.getComment(commentID).setContent(content);
             System.out.println("Comment edited successfully.");
         }
     }
     public void submitRating(int rating) {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
-        } else if (selectedFood.getRaters().contains(loggedInAccount)) {
+        } else if (Food.getFood(selectedFood).getRaters().contains(loggedInAccount)) {
             System.out.println("You have already added a rating for this food!");
         } else {
-            selectedFood.addRating(loggedInAccount, rating);
+            Food.getFood(selectedFood).addRating(loggedInAccount, rating);
             System.out.println("Rating submitted successfully.");
         }
     }
     public void editRating(int rating) {
-        if (selectedFood == null) {
+        if (selectedFood == -1) {
             System.out.println("No food has been selected!");
-        } else if (!selectedFood.getRaters().contains(loggedInAccount)) {
+        } else if (!Food.getFood(selectedFood).getRaters().contains(loggedInAccount)) {
             System.out.println("You have not submitted a rating for this food!");
         } else {
-            selectedFood.addRating(loggedInAccount, rating);
+            Food.getFood(selectedFood).addRating(loggedInAccount, rating);
             System.out.println("Rating submitted successfully.");
         }
     }

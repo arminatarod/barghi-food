@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class path {
+public class Path {
     // for containing the shortest distance path and its information
     private int time, nodeCount;
     private ArrayList<Integer> pathNode;

@@ -1,22 +1,12 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Restaurant {
-    private int location, balance, ratingCount;
-    private Admin admin;
-    // add active order array list
+    private int location, balance, ratingCount, adminID;
     private double averageRating;
     private String name;
-    private ArrayList<Order> orders, activeOrders;
-    private ArrayList<Comment> comments;
-    private ArrayList<Food> menu;
-    private ArrayList<String> foodType;
-    private HashMap<Integer, Food> IDtoFood = new HashMap<>();
-
-    public void setFoodType(ArrayList<String> foodType) {
-        this.foodType = foodType;
-    }
-    public ArrayList<String> getFoodType() {
+    private HashSet<Integer> orders = new HashSet<>(), activeOrders = new HashSet<>(), comments = new HashSet<>(), menu = new HashSet<>();
+    private HashSet<String> foodType;
+    public HashSet<String> getFoodType() {
         return foodType;
     }
     public void addFoodType(String type) {
@@ -31,13 +21,13 @@ public class Restaurant {
     public int getLocation() {
         return location;
     }
-    public void addOrder(Order order) {
-        activeOrders.add(order);
+    public void addOrder(int orderID) {
+        activeOrders.add(orderID);
     }
-    public ArrayList<Order> getOrders() {
+    public HashSet<Integer> getOrders() {
         return orders;
     }
-    public ArrayList<Order> getActiveOrders() {
+    public HashSet<Integer> getActiveOrders() {
         return activeOrders;
     }
     public int getBalance() {
@@ -46,15 +36,11 @@ public class Restaurant {
     public void addBalance(int value) {
         balance += value;
     }
-    public HashMap<Integer, Food> getIDtoFood() {
-        return IDtoFood;
-    }
-    public ArrayList<Food> getMenu() {
+    public HashSet<Integer> getMenu() {
         return menu;
     }
-    public void addMenuItem(Food menuItem) {
-        menu.add(menuItem);
-        IDtoFood.put(menuItem.getId(), menuItem);
+    public void addMenuItem(int foodID) {
+        menu.add(foodID);
     }
     public void deleteMenu() {
         menu.clear();
@@ -72,22 +58,30 @@ public class Restaurant {
     public void editRating(int oldRating, int newRating) {
         averageRating = (averageRating * ratingCount - oldRating + newRating) / ratingCount;
     }
-    public void addComment(Comment comment) {
-        comments.add(comment);
+    public void addComment(int commentID) {
+        comments.add(commentID);
     }
-    public ArrayList<Comment> getComments() {
+    public HashSet<Integer> getComments() {
         return comments;
     }
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
+    public void setAdmin(int adminID) {
+        this.adminID = adminID;
     }
-    public Admin getAdmin() {
-        return admin;
+    public int getAdmin() {
+        return adminID;
     }
     public void setName(String name) {
         this.name = name;
     }
     public String getName() {
         return name;
+    }
+    static public Restaurant getRestaurant(int ID) {
+        Restaurant result = new Restaurant();
+        //TODO: get restaurant from file
+        return result;
+    }
+    static public void saveRestaurant(int ID, Restaurant restaurant) {
+        //TODO: save restaurant to file
     }
 }

@@ -1,62 +1,51 @@
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class User extends Account {
-    // ordinary user class
-    private ArrayList<Integer> locations, orders, comments; // order deliver locations (ids of graph node) & ids of orders & ids of comments
+    private HashSet<Integer> locations, orders, comments;
     private Order cart;
-    private int charge;
-
+    private int balance;
     public User(String userName, String password, String recoveryQuestion, String recoveryQuestionAnswer, int id) {
         super(userName, password, recoveryQuestion, recoveryQuestionAnswer, id);
     }
-
     public Order getCart() {
         return cart;
     }
     public void addLocation(int location) {
         locations.add(location);
     }
-    public int getLocation(int index) {
-        return locations.get(index);
-    }
-    public int getOrder(int index) {
-        return orders.get(index);
-    }
     public void addOrder(int orderID) {
         orders.add(orderID);
     }
-    public ArrayList<Integer> getOrders() {
+    public HashSet<Integer> getOrders() {
         return orders;
     }
-    public ArrayList<Integer> getComments() {
+    public HashSet<Integer> getComments() {
         return comments;
     }
-    public ArrayList<Integer> getLocations() {
+    public HashSet<Integer> getLocations() {
         return locations;
     }
-
-    public void setCharge(int charge) {
-        this.charge = charge;
+    public void setBalance(int amount) {
+        this.balance = amount;
     }
-    public int getCharge() {
-        return charge;
+    public int getBalance() {
+        return balance;
     }
-    public void addCharge (int value) {
-        charge += value;
+    public void addBalance(int amount) {
+        this.balance += amount;
     }
     public void addComment(int commentID) {
         comments.add(commentID);
     }
-    public int getComment(int index) {
-        return comments.get(index);
+    public void removeLocation(int id) {
+        locations.remove(id);
     }
-    public void removeLocations(int id) {
-        for (int i = 0; i < locations.size(); i++)
-            if (locations.get(i) == id) {
-                locations.remove(i);
-                return;
-            }
+    static public User getUser(int ID) {
+        User result = new User("asdf", "1234", "asdf", "asdf", 1234);
+        //TODO: get user from file
+        return result;
     }
-
-
+    static public void saveUser(int ID, User user) {
+        //TODO: save user to file
+    }
 }
