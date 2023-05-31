@@ -79,7 +79,7 @@ public class Map {
 
         return ans;
     }
-    public path getShortestPath (int node1, int node2){
+    public Path getShortestPath (int node1, int node2){
         dis = new int[n];
         dad = new int[n];
         isInQueue = new boolean[n];
@@ -102,7 +102,7 @@ public class Map {
                     }
                 }
         }
-        path ans = new path();
+        Path ans = new Path();
         ans.setTime(dis[node2]);
         ArrayList<Integer> tmp = new ArrayList<Integer>();
         while (node2 != node1) {
