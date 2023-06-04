@@ -1,7 +1,7 @@
 import java.util.HashSet;
 
 public class User extends Account {
-    private HashSet<Integer> locations, orders, comments;
+    private HashSet<Integer> locations = new HashSet<>(), orders = new HashSet<>(), comments = new HashSet<>();
     private Order cart;
     private int balance;
     public User(String userName, String password, String recoveryQuestion, String recoveryQuestionAnswer, int id) {

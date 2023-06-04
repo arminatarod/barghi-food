@@ -5,7 +5,7 @@ public class Restaurant {
     private double averageRating;
     private String name;
     private HashSet<Integer> orders = new HashSet<>(), activeOrders = new HashSet<>(), comments = new HashSet<>(), menu = new HashSet<>();
-    private HashSet<String> foodType;
+    private HashSet<String> foodType = new HashSet<>();
     public HashSet<String> getFoodType() {
         return foodType;
     }

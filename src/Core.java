@@ -1,26 +1,39 @@
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Core {
-    Map map;
-    HashSet<Account> accounts;
+    Map map = new Map();
+    int accounts, restaurants, foods, orders, comments;
+    HashMap<String, ArrayList<Integer>> restaurantNames = new HashMap<>(), foodNames = new HashMap<>();
     int loggedInAccount = -1, loggedInUser = -1, loggedInAdmin = -1, loggedInDeliveryman = -1;
     int selectedRestaurant = -1, selectedFood = -1;
+    Core() {
+        //TODO: get the number of accounts, restaurants, etc. from the files
+        for (int restaurantID = 0; restaurantID < restaurants; restaurantID++) {
+            restaurantNames.putIfAbsent(Restaurant.getRestaurant(restaurantID).getName(), new ArrayList<>());
+            restaurantNames.get(Restaurant.getRestaurant(restaurantID).getName()).add(restaurantID);
+        }
+        for (int foodID = 0; foodID < foods; foodID++) {
+            foodNames.putIfAbsent(Food.getFood(foodID).getName(), new ArrayList<>());
+            foodNames.get(Food.getFood(foodID).getName()).add(foodID);
+        }
+    }
     public void login(String userName, String password) {
         if (loggedInAccount != -1) {
             System.out.println("You are already logged in.");
             return;
         }
-        for (Account acc : accounts) {
-            if (userName.equals(acc.getUsername())) {
-                if (password.equals(acc.getPassword())) {
-                    System.out.println("Logged in successfully.");
-                    if (acc.getType().equals("User"))
-                        loggedInUser = acc.getId();
-                    else if (acc.getType().equals("Admin"))
-                        loggedInUser = acc.getId();
+        for (int accountID = 0; accountID < accounts; accountID++) {
+            if (userName.equals(Account.getAccount(accountID).getUsername())) {
+                if (password.equals(Account.getAccount(accountID).getPassword())) {
+                    if (Account.getAccount(accountID).getType().equals("User"))
+                        loggedInUser = Account.getAccount(accountID).getId();
+                    else if (Account.getAccount(accountID).getType().equals("Admin"))
+                        loggedInUser = Account.getAccount(accountID).getId();
                     else
-                        loggedInDeliveryman = acc.getId();
-                    loggedInAccount = acc.getId();
+                        loggedInDeliveryman = Account.getAccount(accountID).getId();
+                    loggedInAccount = Account.getAccount(accountID).getId();
+                    System.out.println("Logged in successfully.");
                     return;
                 }
                 System.out.println("Incorrect password!");
@@ -45,14 +58,20 @@ public class Core {
             }
         }
     }
-    public void addUser(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
-        accounts.add(new User(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts.size()));
-    }
-    public void addDelivery(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
-        accounts.add(new Deliveryman(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts.size()));
-    }
-    public void addAdmin(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
-        accounts.add(new Admin(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts.size()));
+    public void addAccount(String type, String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
+        Account account = new Account(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts++);
+        account.setType(type);
+        Account.saveAccount(account.getId(), account);
+        if (account.getType().equals("User")) {
+            User user = new User(username, password, recoveryQuestion, recoveryQuestionAnswer, account.getId());
+            User.saveUser(user.getId(), user);
+        } else if (account.getType().equals("Admin")) {
+            Admin admin = new Admin(username, password, recoveryQuestion, recoveryQuestionAnswer, account.getId());
+            Admin.saveAdmin(admin.getId(), admin);
+        } else {
+            Deliveryman deliveryman = new Deliveryman(username, password, recoveryQuestion, recoveryQuestionAnswer, account.getId());
+            Deliveryman.saveDeliveryman(deliveryman.getId(), deliveryman);
+        }
     }
     public void showLocation() {
         if (selectedRestaurant == -1) {
@@ -245,7 +264,7 @@ public class Core {
             System.out.println("Response edited successfully.");
         }
     }
-    public void unselectFood() {
+    public void deselectFood() {
         if (selectedFood == -1) {
             System.out.println("No food has been selected!");
         } else {
@@ -253,7 +272,7 @@ public class Core {
             System.out.println("Food unselected successfully.");
         }
     }
-    public void unselectRestaurant() {
+    public void deselectRestaurant() {
         if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
         } else {
@@ -303,7 +322,9 @@ public class Core {
             Comment c = new Comment();
             c.setCommenter(loggedInAccount);
             c.setContent(content);
-            //TODO: set ID
+            c.setId(comments++);
+            Comment.saveComment(c.getId(), c);
+            Food.getFood(selectedFood).getComments().add(c.getId());
             System.out.println("Comment added successfully.");
         }
     }
