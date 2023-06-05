@@ -376,7 +376,23 @@ public class Core {
         }
     }
     public void searchFoodName(String name) {
-
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else if(selectedRestaurant == -1)
+        {
+            System.out.println("no restaurant has been selected!!!");
+        }
+        else{
+            for(Integer foodId : Restaurant.getRestaurant(selectedRestaurant).getMenu())
+            {
+                if(name.equals(Food.getFood(foodId).getName().substring(0,name.length())));
+                {
+                    System.out.println("food name: "+Food.getFood(foodId).getName()+" food price: "+ Food.getFood(foodId).getPrice());
+                }
+            }
+        }
     }
     public void addComment(String content) {
         if (selectedFood == -1) {
