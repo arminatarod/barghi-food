@@ -1,25 +1,27 @@
 import java.util.HashMap;
 
 public class Order {
-    private class FoodData {
-        private int count, totalPrice, discount;
+    public class FoodData {
+        private int count;
+        private double totalPrice, discount;
 
         public int getCount() {
             return count;
         }
+        public double getDiscount(){ return discount; }
         public void setCount(int count) {
             this.count = count;
         }
-        public void setDiscount(int discount) {
+        public void setDiscount(double discount) {
             this.discount = discount;
         }
-        public int getTotalPrice() {
+        public double getTotalPrice() {
             return totalPrice;
         }
-        public void setTotalPrice(int totalPrice) {
+        public void setTotalPrice(double totalPrice) {
             this.totalPrice = totalPrice;
         }
-        public void addPrice(int value) {
+        public void addPrice(double value) {
             totalPrice += value;
         }
         public void addCount(int value) {

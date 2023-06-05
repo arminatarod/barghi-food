@@ -6,8 +6,14 @@ public class Restaurant {
     private String name;
     private HashSet<Integer> orders = new HashSet<>(), activeOrders = new HashSet<>(), comments = new HashSet<>(), menu = new HashSet<>();
     private HashSet<String> foodType = new HashSet<>();
+    private HashSet<Food> foods = new HashSet<>();
     public HashSet<String> getFoodType() {
         return foodType;
+    }
+    public void addFoodToMenu(String foodName,int id,Restaurant restaurant,int price)
+    {
+        foods.add(new Food(id,price,restaurant, foodName));
+        menu.add(id);
     }
     public void addFoodType(String type) {
         foodType.add(type);
@@ -38,9 +44,6 @@ public class Restaurant {
     }
     public HashSet<Integer> getMenu() {
         return menu;
-    }
-    public void addMenuItem(int foodID) {
-        menu.add(foodID);
     }
     public void deleteMenu() {
         menu.clear();

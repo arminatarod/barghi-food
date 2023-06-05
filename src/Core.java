@@ -1,39 +1,30 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 public class Core {
-    Map map = new Map();
-    int accounts, restaurants, foods, orders, comments;
-    HashMap<String, ArrayList<Integer>> restaurantNames = new HashMap<>(), foodNames = new HashMap<>();
+    Map map;
+    HashSet<Account> accounts;
     int loggedInAccount = -1, loggedInUser = -1, loggedInAdmin = -1, loggedInDeliveryman = -1;
     int selectedRestaurant = -1, selectedFood = -1;
-    Core() {
-        //TODO: get the number of accounts, restaurants, etc. from the files
-        for (int restaurantID = 0; restaurantID < restaurants; restaurantID++) {
-            restaurantNames.putIfAbsent(Restaurant.getRestaurant(restaurantID).getName(), new ArrayList<>());
-            restaurantNames.get(Restaurant.getRestaurant(restaurantID).getName()).add(restaurantID);
-        }
-        for (int foodID = 0; foodID < foods; foodID++) {
-            foodNames.putIfAbsent(Food.getFood(foodID).getName(), new ArrayList<>());
-            foodNames.get(Food.getFood(foodID).getName()).add(foodID);
-        }
-    }
     public void login(String userName, String password) {
         if (loggedInAccount != -1) {
             System.out.println("You are already logged in.");
             return;
         }
-        for (int accountID = 0; accountID < accounts; accountID++) {
-            if (userName.equals(Account.getAccount(accountID).getUsername())) {
-                if (password.equals(Account.getAccount(accountID).getPassword())) {
-                    if (Account.getAccount(accountID).getType().equals("User"))
-                        loggedInUser = Account.getAccount(accountID).getId();
-                    else if (Account.getAccount(accountID).getType().equals("Admin"))
-                        loggedInUser = Account.getAccount(accountID).getId();
-                    else
-                        loggedInDeliveryman = Account.getAccount(accountID).getId();
-                    loggedInAccount = Account.getAccount(accountID).getId();
+        for (Account acc : accounts) {
+            if (userName.equals(acc.getUsername())) {
+                if (password.equals(acc.getPassword())) {
                     System.out.println("Logged in successfully.");
+                    if (acc.getType().equals("User"))
+                        loggedInUser = acc.getId();
+                    else if (acc.getType().equals("Admin"))
+                        loggedInUser = acc.getId();
+                    else
+                        loggedInDeliveryman = acc.getId();
+                    loggedInAccount = acc.getId();
                     return;
                 }
                 System.out.println("Incorrect password!");
@@ -58,20 +49,14 @@ public class Core {
             }
         }
     }
-    public void addAccount(String type, String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
-        Account account = new Account(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts++);
-        account.setType(type);
-        Account.saveAccount(account.getId(), account);
-        if (account.getType().equals("User")) {
-            User user = new User(username, password, recoveryQuestion, recoveryQuestionAnswer, account.getId());
-            User.saveUser(user.getId(), user);
-        } else if (account.getType().equals("Admin")) {
-            Admin admin = new Admin(username, password, recoveryQuestion, recoveryQuestionAnswer, account.getId());
-            Admin.saveAdmin(admin.getId(), admin);
-        } else {
-            Deliveryman deliveryman = new Deliveryman(username, password, recoveryQuestion, recoveryQuestionAnswer, account.getId());
-            Deliveryman.saveDeliveryman(deliveryman.getId(), deliveryman);
-        }
+    public void addUser(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
+        accounts.add(new User(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts.size()));
+    }
+    public void addDelivery(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
+        accounts.add(new Deliveryman(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts.size()));
+    }
+    public void addAdmin(String username, String password, String recoveryQuestion, String recoveryQuestionAnswer) {
+        accounts.add(new Admin(username, password, recoveryQuestion, recoveryQuestionAnswer, accounts.size()));
     }
     public void showLocation() {
         if (selectedRestaurant == -1) {
@@ -188,7 +173,19 @@ public class Core {
         }
     }
     public void addFood(String foodName, int foodPrice) {
-
+        if (selectedRestaurant == -1) {
+            System.out.println("No restaurant has been selected!");
+        }
+        else if(Restaurant.getRestaurant(selectedRestaurant).getFoodType().contains(foodName))
+        {
+            System.out.println("The selected restaurant has a food with the given name!");
+        }
+        else
+        {
+            int id = 10;//byd ye rvshi bra random krdn id estefade beshe mesln tike avl id resturan bashe tike dovom msln indexsh to list
+            Restaurant.getRestaurant(selectedRestaurant).addFoodToMenu(foodName,id,Restaurant.getRestaurant(selectedRestaurant),foodPrice);
+            System.out.println("The food added successfully.");
+        }
     }
     public void activateFood(int foodID) {
         if (selectedRestaurant == -1) {
@@ -202,7 +199,15 @@ public class Core {
         }
     }
     public void deactivateFood(int foodID) {
-
+        if (selectedRestaurant == -1) {
+            System.out.println("No restaurant has been selected!");
+            return;
+        } else if (!Restaurant.getRestaurant(selectedRestaurant).getMenu().contains(foodID)) {
+            System.out.println("The selected restaurant does not have a food with the given ID!");
+        } else {
+            Food.getFood(foodID).setActive(false);
+            System.out.println("Information updated successfully.");
+        }
     }
     public void discountFood(int foodID, int discountPercentage, int timestamp) {
         if (selectedRestaurant == -1) {
@@ -264,7 +269,7 @@ public class Core {
             System.out.println("Response edited successfully.");
         }
     }
-    public void deselectFood() {
+    public void unselectFood() {
         if (selectedFood == -1) {
             System.out.println("No food has been selected!");
         } else {
@@ -272,7 +277,7 @@ public class Core {
             System.out.println("Food unselected successfully.");
         }
     }
-    public void deselectRestaurant() {
+    public void unselectRestaurant() {
         if (selectedRestaurant == -1) {
             System.out.println("No restaurant has been selected!");
         } else {
@@ -281,6 +286,26 @@ public class Core {
         }
     }
     public void displayActiveOrders() {
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in yet!!!");
+        } else if (User.getUser(loggedInUser).getOrders().isEmpty()) {
+            System.out.println("There is no order!!!");
+        }else
+        {
+            int i=0;
+            for(Integer orderId : User.getUser(loggedInUser).getOrders())
+            {
+                i++;
+                System.out.println("Order ( "+i+" ) :");
+                for(Map.Entry<Integer, Order.FoodData> item : Order.getOrder(orderId).getItems().entrySet())
+                {
+                    System.out.println("food name: "+Food.getFood(item.getKey()).getName()+" food id: "+
+                            item.getKey()+" count: "+item.getValue().getCount()+" discount: %"+
+                            item.getValue().getDiscount()+" total-price: "+item.getValue().getTotalPrice());
+                }
+            }
+        }
 
     }
     public void editOrderStatus(int OrderId, String Status) {
@@ -308,7 +333,47 @@ public class Core {
         }
     }
     public void searchRestaurantName(String name) {
-
+        List<Account> tmp = new ArrayList<>(accounts);
+        if(loggedInAdmin != -1)
+        {
+            boolean check = false;
+            Admin admin = (Admin) tmp.get(loggedInAdmin);
+            for(Integer restaurantId : admin.getRestaurants())
+            {
+                if(Restaurant.getRestaurant(restaurantId).getName().substring(0,name.length()-1).equals(name))
+                {
+                    System.out.println("Restaurant name : "+ Restaurant.getRestaurant(restaurantId).getName()+ " Restaurant ID: "+ restaurantId);
+                    check = true;
+                }
+            }
+            if(!check)
+            {
+                System.out.println("There is no restaurant with this given name!!!");
+            }
+        }
+        else if(loggedInUser != -1)
+        {
+            boolean check = false;
+            for(Account acc : tmp)
+            {
+                if(acc.getClass() == Admin.class)
+                {
+                    Admin admin = (Admin) acc;
+                    for(Integer restaurantId : admin.getRestaurants())
+                    {
+                        if(Restaurant.getRestaurant(restaurantId).getName().substring(0,name.length()-1).equals(name))
+                        {
+                            System.out.println("Restaurant name : "+ Restaurant.getRestaurant(restaurantId).getName()+ " Restaurant ID: "+ restaurantId);
+                            check = true;
+                        }
+                    }
+                }
+            }
+            if(!check)
+            {
+                System.out.println("There is no restaurant with this given name!!!");
+            }
+        }
     }
     public void searchFoodName(String name) {
 
@@ -322,9 +387,7 @@ public class Core {
             Comment c = new Comment();
             c.setCommenter(loggedInAccount);
             c.setContent(content);
-            c.setId(comments++);
-            Comment.saveComment(c.getId(), c);
-            Food.getFood(selectedFood).getComments().add(c.getId());
+            //TODO: set ID
             System.out.println("Comment added successfully.");
         }
     }

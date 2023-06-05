@@ -10,6 +10,13 @@ public class Food {
     private boolean activeDiscount, isActive;
     private HashSet<Integer> comments = new HashSet<>();
 
+    public Food(int id, int price, Restaurant restaurant, String name) {
+        this.id = id;
+        this.price = price;
+        this.restaurant = restaurant;
+        this.name = name;
+    }
+    public Food(){ }
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
