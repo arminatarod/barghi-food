@@ -428,19 +428,62 @@ public class Core {
 
     }
     public void showCart() {
-
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else if(User.getUser(loggedInUser).getCart().getItems().size() == 0)
+        {
+            System.out.println("There is no order!!!");
+        }
+        else
+        {
+            System.out.println("your cart is: ");
+            for(Map.Entry<Integer, Order.FoodData> item : User.getUser(loggedInUser).getCart().getItems().entrySet())
+            {
+                System.out.println("food name: "+Food.getFood(item.getKey()).getName()+ " count: "+ item.getValue().getCount()
+                        +" discount: %"+ item.getValue().getDiscount()+" total-price: "+item.getValue().getTotalPrice());
+            }
+        }
     }
     public void confirmOrder() {
-
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else if(User.getUser(loggedInUser).getCart() == null)
+        {
+            System.out.println("you have not chosen anything!!!");
+        }
+        else
+        {
+            System.out.println("Done!");
+            User.getUser(loggedInUser).getCart().setStatus("CONFIRMED");//agr ye enum bznim bra in kara be nzrm bhtare
+        }
     }
     public void showEstimatedDeliveryTime() {
 
     }
     public void chargeAccount(int value) {
-
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else
+        {
+            User.getUser(loggedInUser).addBalance(value);
+            System.out.println("your balance charged successfully.");
+        }
     }
     public void displayAccountBalance() {
-
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else
+        {
+            System.out.println("your balance is: "+ User.getUser(loggedInUser).getBalance());
+        }
     }
     public void showPath() {
 
