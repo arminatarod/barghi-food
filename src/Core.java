@@ -422,10 +422,43 @@ public class Core {
         }
     }
     public void addToCart(int count) {
-
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else if(selectedFood == -1)
+        {
+            System.out.println("you have not selected any food!!!");
+        }
+        else
+        {
+            for(int i=0;i<count;i++)
+                User.getUser(loggedInUser).getCart().addItem(Food.getFood(selectedFood));
+            System.out.println("added successfully.");
+        }
     }
     public void selectOrder(int id) {
-
+        if(loggedInUser == -1)
+        {
+            System.out.println("No one has logged in!!!");
+        }
+        else if(User.getUser(loggedInUser).getOrders().size() == 0)
+        {
+            System.out.println("There is no order!!!");
+        }
+        else if(!User.getUser(loggedInUser).getOrders().contains(id))
+        {
+            System.out.println("there is no order with this given id!");
+        }
+        else
+        {
+            System.out.println("order id: "+id);
+            for(Map.Entry<Integer, Order.FoodData> item : Order.getOrder(id).getItems().entrySet())//inja frz krdm id order hm yektast
+            {
+                System.out.println("food name: "+Food.getFood(item.getKey()).getName()+ " count: "+ item.getValue().getCount()
+                        +" discount: %"+ item.getValue().getDiscount()+" total-price: "+item.getValue().getTotalPrice());
+            }
+        }
     }
     public void showCart() {
         if(loggedInUser == -1)
