@@ -63,7 +63,7 @@
       <workItem from="1684901893260" duration="5814000" />
       <workItem from="1687852553666" duration="206000" />
       <workItem from="1687852773279" duration="265000" />
-      <workItem from="1687853051981" duration="1754000" />
+      <workItem from="1687853051981" duration="1959000" />
     </task>
     <task id="LOCAL-00001" summary="Project start">
       <created>1684773695061</created>
@@ -135,7 +135,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687854341634</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="data Models v1.0&#10;problems with main branch">
+      <created>1687854833626</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1687854833626</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
