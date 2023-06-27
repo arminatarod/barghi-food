@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.HashSet;
 
 public class Restaurant {
@@ -80,11 +83,19 @@ public class Restaurant {
         return name;
     }
     static public Restaurant getRestaurant(int ID) {
-        Restaurant result = new Restaurant();
-        //TODO: get restaurant from file
+        Restaurant result;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.readValue("src/data/restaurants/" + ID + ".json", Restaurant.class);
+        } catch (Exception e) {
+            return null;
+        }
         return result;
     }
     static public void saveRestaurant(int ID, Restaurant restaurant) {
-        //TODO: save restaurant to file
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/data/restaurants/" + ID + ".json"), restaurant);
+        } catch (Exception ignored) {}
     }
 }

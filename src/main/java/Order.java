@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.HashMap;
 
 public class Order {
@@ -105,11 +108,19 @@ public class Order {
         }
     }
     static public Order getOrder(int ID) {
-        Order result = new Order();
-        //TODO: get order from file
+        Order result;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.readValue("src/data/orders/" + ID + ".json", Order.class);
+        } catch (Exception e) {
+            return null;
+        }
         return result;
     }
     static public void saveOrder(int ID, Order order) {
-        //TODO: save order to file
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/data/orders/" + ID + ".json"), order);
+        } catch (Exception ignored) {}
     }
 }

@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.HashSet;
 
 public class Deliveryman extends Account {
@@ -34,11 +37,19 @@ public class Deliveryman extends Account {
         this.activeOrder = activeOrder;
     }
     static public Deliveryman getDeliveryman(int ID) {
-        Deliveryman result = new Deliveryman("asdf", "1234", "asdf", "asdf", 1234);
-        //TODO: get deliveryman from file
+        Deliveryman result;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.readValue("src/data/deliverymen/" + ID + ".json", Deliveryman.class);
+        } catch (Exception e) {
+            return null;
+        }
         return result;
     }
     static public void saveDeliveryman(int ID, Deliveryman deliveryman) {
-        //TODO: save deliveryman to file
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/data/deliverymen/" + ID + ".json"), deliveryman);
+        } catch (Exception ignored) {}
     }
 }

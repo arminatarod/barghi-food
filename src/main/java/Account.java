@@ -1,3 +1,9 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
+
 public class Account {
     private String username, password, type, recoveryQuestion, recoveryQuestionAnswer;
     private int id;
@@ -33,11 +39,19 @@ public class Account {
         this.type = type;
     }
     static public Account getAccount(int ID) {
-        Account result = new Account("asdf", "1234", "asdf", "asdf", 1234);
-        //TODO: get account from file
+        Account result;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.readValue("src/data/accounts/" + ID + ".json", Account.class);
+        } catch (Exception e) {
+            return null;
+        }
         return result;
     }
     static public void saveAccount(int ID, Account account) {
-        //TODO: save account to file
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/data/accounts/" + ID + ".json"), account);
+        } catch (Exception ignored) {}
     }
 }

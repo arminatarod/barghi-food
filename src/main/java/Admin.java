@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.*;
 
 public class Admin extends Account {
@@ -22,11 +25,19 @@ public class Admin extends Account {
 
     }
     static public Admin getAdmin(int ID) {
-        Admin result = new Admin("asdf", "1234", "asdf", "asdf", 1234);
-        //TODO: get admin from file
+        Admin result;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.readValue("src/data/admins/" + ID + ".json", Admin.class);
+        } catch (Exception e) {
+            return null;
+        }
         return result;
     }
     static public void saveAdmin(int ID, Admin admin) {
-        //TODO: save admin to file
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/data/admins/" + ID + ".json"), admin);
+        } catch (Exception ignored) {}
     }
 }

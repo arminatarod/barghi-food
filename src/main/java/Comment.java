@@ -1,3 +1,7 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+
 public class Comment {
     private int id;
     private String content, answer;
@@ -28,11 +32,19 @@ public class Comment {
         this.content = commentText;
     }
     static public Comment getComment(int ID) {
-        Comment result = new Comment();
-        //TODO: get comment from file
+        Comment result;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.readValue("src/data/comments/" + ID + ".json", Comment.class);
+        } catch (Exception e) {
+            return null;
+        }
         return result;
     }
     static public void saveComment(int ID, Comment comment) {
-        //TODO: save comment to file
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/data/comments/" + ID + ".json"), comment);
+        } catch (Exception ignored) {}
     }
 }

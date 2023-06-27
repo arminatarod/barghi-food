@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.HashSet;
 
 public class User extends Account {
@@ -41,11 +44,19 @@ public class User extends Account {
         locations.remove(id);
     }
     static public User getUser(int ID) {
-        User result = new User("asdf", "1234", "asdf", "asdf", 1234);
-        //TODO: get user from file
+        User result;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            result = mapper.readValue("src/data/users/" + ID + ".json", User.class);
+        } catch (Exception e) {
+            return null;
+        }
         return result;
     }
     static public void saveUser(int ID, User user) {
-        //TODO: save user to file
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/data/users/" + ID + ".json"), user);
+        } catch (Exception ignored) {}
     }
 }
