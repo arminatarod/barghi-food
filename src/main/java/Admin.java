@@ -14,14 +14,11 @@ public class Admin extends Account {
     public HashSet<Integer> getRestaurants() {
         return restaurants;
     }
-    public void showRestaurants()
-    {
+    public void showRestaurants() {
         HashMap<String, Restaurant> mp = new HashMap<>();
-        for(Integer restaurantId : restaurants)
-        {
+        for(Integer restaurantId : restaurants) {
             mp.put(Restaurant.getRestaurant(restaurantId).getName(),Restaurant.getRestaurant(restaurantId));
         }
-
 
     }
     static public Admin getAdmin(int ID) {
